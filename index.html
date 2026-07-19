@@ -644,7 +644,7 @@ local customTris  = ${JSON.stringify(tris)}
 local customColor = Color3.fromRGB(${r}, ${g}, ${b})
 
 -- Load Engine & Pass Custom Mesh
-local mainEngine = loadstring(game:HttpGet("https://raw.githubusercontent.com/huoadf/matcha3d/main/shapes.lua"))()
+local mainEngine = loadstring(game:HttpGet("https://raw.githubusercontent.com/huoadf/matcha3d/main/shapes.lua?v=2"))()
 
 if _G.LoadCustomShape then
     _G.LoadCustomShape(customVerts, customTris, customColor)
