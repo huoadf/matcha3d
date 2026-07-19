@@ -1,3 +1,21 @@
+-- ==============================================================================
+-- 🎨 CUSTOM SHAPE CONFIG (EDIT THESE TABLES DIRECTLY TO CHANGE YOUR SHAPE!)
+-- ==============================================================================
+_G.customVerts = _G.customVerts or {
+    {0, 2.2, 0},     -- P1 (Top Apex)
+    {-1.5, 0, -1.5}, -- P2 (Corner 1)
+    {1.5, 0, -1.5},  -- P3 (Corner 2)
+    {1.5, 0, 1.5},   -- P4 (Corner 3)
+    {-1.5, 0, 1.5},  -- P5 (Corner 4)
+    {0, -2.2, 0}     -- P6 (Bottom Apex)
+}
+_G.customTris = _G.customTris or {
+    {1, 2, 3}, {1, 3, 4}, {1, 4, 5}, {1, 5, 2}, -- Top Faces
+    {6, 3, 2}, {6, 4, 3}, {6, 5, 4}, {6, 2, 5}  -- Bottom Faces
+}
+_G.customColor = _G.customColor or Color3.fromRGB(238, 138, 255)
+-- ==============================================================================
+
 local Players = game:GetService("Players")
 local _WTS = WorldToScreen
 local V2_ZERO = Vector2.new(0, 0)
@@ -51,7 +69,7 @@ local CFG = {
     COL_KNOT = Color3.fromRGB(255, 120, 200),
     HYPER_SEGS = 16, HYPER_RINGS = 10, HYPER_RADIUS = 1.6, HYPER_WAIST = 0.5, HYPER_HEIGHT = 2.5,
     COL_HYPER = Color3.fromRGB(80, 220, 180),
-    COL_CUSTOM = Color3.fromRGB(255, 230, 80),
+    COL_CUSTOM = _G.customColor,
 }
 local CROSS_STYLE = "Cross"
 local REFRESH_RATE = 1 / CFG.FPS
@@ -69,7 +87,7 @@ local SPIN_ON, SPIN_SPD, SPIN_ANG = {}, {}, {}
 local ROT_X, ROT_Y, ROT_Z = {}, {}, {}
 local OFF_X, OFF_Y, OFF_Z = {}, {}, {}
 for _, k in ipairs(SHAPE_KEYS) do
-    EN[k]=false; RB[k]=false
+    EN[k] = (k == "custom"); RB[k]=false
     SPIN_ON[k]=false; SPIN_SPD[k]=1.0; SPIN_ANG[k]=0
     ROT_X[k]=0; ROT_Y[k]=0; ROT_Z[k]=0
     OFF_X[k]=0; OFF_Y[k]=3.0; OFF_Z[k]=0
@@ -965,20 +983,8 @@ end
 --   tris  = { {p1, p2, p3}, ... }                -- 1-based vertex index triplets
 -- ==============================================================================
 local CUSTOM_MESH = {
-    verts = {
-        {0, 2.2, 0},     -- P1 (Top Apex)
-        {-1.5, 0, -1.5}, -- P2 (Corner 1)
-        {1.5, 0, -1.5},  -- P3 (Corner 2)
-        {1.5, 0, 1.5},   -- P4 (Corner 3)
-        {-1.5, 0, 1.5},  -- P5 (Corner 4)
-        {0, -2.2, 0}     -- P6 (Bottom Apex)
-    },
-    tris = {
-        -- Top Pyramid Faces
-        {1, 2, 3}, {1, 3, 4}, {1, 4, 5}, {1, 5, 2},
-        -- Bottom Pyramid Faces
-        {6, 3, 2}, {6, 4, 3}, {6, 5, 4}, {6, 2, 5}
-    }
+    verts = _G.customVerts,
+    tris  = _G.customTris
 }
 
 local function loadCustomMeshFromJSON(jsonStr)
