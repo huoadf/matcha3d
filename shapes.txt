@@ -1038,14 +1038,23 @@ local function drawCustomMesh(pool, ox, oy, oz, key, col, wire, transp)
 
     local projected = {}
     for i, v in ipairs(verts) do
-        projected[i] = projLocal(key, ox, oy, oz, v[1], v[2], v[3])
+        if type(v) == "table" then
+            local vx = type(v[1]) == "number" and v[1] or 0
+            local vy = type(v[2]) == "number" and v[2] or 0
+            local vz = type(v[3]) == "number" and v[3] or 0
+            projected[i] = projLocal(key, ox, oy, oz, vx, vy, vz)
+        end
     end
 
     for ti = 1, math.min(numTris, #pool) do
         local f = tris[ti]
-        local p1, p2, p3 = projected[f[1]], projected[f[2]], projected[f[3]]
-        if p1 and p2 and p3 then
-            setTriP(pool, ti, col, p1, p2, p3, wire, transp)
+        if type(f) == "table" and f[1] and f[2] and f[3] then
+            local p1, p2, p3 = projected[f[1]], projected[f[2]], projected[f[3]]
+            if p1 and p2 and p3 then
+                setTriP(pool, ti, col, p1, p2, p3, wire, transp)
+            else
+                if pool[ti] then pool[ti].Visible = false end
+            end
         else
             if pool[ti] then pool[ti].Visible = false end
         end
