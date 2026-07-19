@@ -957,14 +957,27 @@ local function drawHyperboloid(pool, ox, oy, oz, key, col, wire, transp)
     end
 end
 
--- ── Custom Shape Data & Web HTTP Loader ──────────────────────────────────────
+-- ==============================================================================
+-- 🎨 CUSTOM SHAPE DEFINITION (EDIT THIS TABLE DIRECTLY TO MAKE YOUR OWN SHAPE!)
+-- ==============================================================================
+-- Format:
+--   verts = { {x1, y1, z1}, {x2, y2, z2}, ... }  -- 3D point coordinates
+--   tris  = { {p1, p2, p3}, ... }                -- 1-based vertex index triplets
+-- ==============================================================================
 local CUSTOM_MESH = {
     verts = {
-        {-1.5, 0, -1.5}, {1.5, 0, -1.5}, {1.5, 0, 1.5}, {-1.5, 0, 1.5},
-        {0, 2.5, 0}
+        {0, 2.2, 0},     -- P1 (Top Apex)
+        {-1.5, 0, -1.5}, -- P2 (Corner 1)
+        {1.5, 0, -1.5},  -- P3 (Corner 2)
+        {1.5, 0, 1.5},   -- P4 (Corner 3)
+        {-1.5, 0, 1.5},  -- P5 (Corner 4)
+        {0, -2.2, 0}     -- P6 (Bottom Apex)
     },
     tris = {
-        {1, 2, 5}, {2, 3, 5}, {3, 4, 5}, {4, 1, 5}, {1, 2, 3}, {1, 3, 4}
+        -- Top Pyramid Faces
+        {1, 2, 3}, {1, 3, 4}, {1, 4, 5}, {1, 5, 2},
+        -- Bottom Pyramid Faces
+        {6, 3, 2}, {6, 4, 3}, {6, 5, 4}, {6, 2, 5}
     }
 }
 
