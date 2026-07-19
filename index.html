@@ -574,46 +574,53 @@
           nodeGroup.add(node);
         });
       } else if (activeMode === 'math') {
-        const eqXStr = document.getElementById('eqX').value;
-        const eqYStr = document.getElementById('eqY').value;
-        const eqZStr = document.getElementById('eqZ').value;
+        const eqXStr = (document.getElementById('eqX') ? document.getElementById('eqX').value : '').trim();
+        const eqYStr = (document.getElementById('eqY') ? document.getElementById('eqY').value : '').trim();
+        const eqZStr = (document.getElementById('eqZ') ? document.getElementById('eqZ').value : '').trim();
 
-        try {
-          const fx = new Function('u', 'v', `return ${eqXStr};`);
-          const fy = new Function('u', 'v', `return ${eqYStr};`);
-          const fz = new Function('u', 'v', `return ${eqZStr};`);
+        let fx = null, fy = null, fz = null;
+        if (eqXStr && eqYStr && eqZStr) {
+          try { fx = new Function('u', 'v', 'return (' + eqXStr + ');'); fx(0, 0); } catch(e) { fx = null; }
+          try { fy = new Function('u', 'v', 'return (' + eqYStr + ');'); fy(0, 0); } catch(e) { fy = null; }
+          try { fz = new Function('u', 'v', 'return (' + eqZStr + ');'); fz(0, 0); } catch(e) { fz = null; }
+        }
 
-          const segU = 12, segV = 12;
-          const tempVerts = [], tempTris = [];
-          for (let i = 0; i <= segU; i++) {
-            const u = (i / segU) * Math.PI * 2;
-            for (let j = 0; j <= segV; j++) {
-              const v = (j / segV) * Math.PI * 2;
-              const vx = fx(u, v), vy = fy(u, v), vz = fz(u, v);
-              if (isNaN(vx) || isNaN(vy) || isNaN(vz)) throw new Error("Invalid Math output");
-              tempVerts.push([vx, vy, vz]);
+        if (fx && fy && fz) {
+          try {
+            const segU = 12, segV = 12;
+            const tempVerts = [], tempTris = [];
+            for (let i = 0; i <= segU; i++) {
+              const u = (i / segU) * Math.PI * 2;
+              for (let j = 0; j <= segV; j++) {
+                const v = (j / segV) * Math.PI * 2;
+                const vx = fx(u, v), vy = fy(u, v), vz = fz(u, v);
+                if (typeof vx !== 'number' || typeof vy !== 'number' || typeof vz !== 'number' || isNaN(vx) || isNaN(vy) || isNaN(vz)) {
+                  throw new Error("Invalid output");
+                }
+                tempVerts.push([vx, vy, vz]);
+              }
             }
-          }
 
-          for (let i = 0; i < segU; i++) {
-            for (let j = 0; j < segV; j++) {
-              const p1 = i * (segV + 1) + j + 1;
-              const p2 = i * (segV + 1) + (j + 1) + 1;
-              const p3 = (i + 1) * (segV + 1) + j + 1;
-              const p4 = (i + 1) * (segV + 1) + (j + 1) + 1;
-              tempTris.push([p1, p2, p3], [p2, p4, p3]);
+            for (let i = 0; i < segU; i++) {
+              for (let j = 0; j < segV; j++) {
+                const p1 = i * (segV + 1) + j + 1;
+                const p2 = i * (segV + 1) + (j + 1) + 1;
+                const p3 = (i + 1) * (segV + 1) + j + 1;
+                const p4 = (i + 1) * (segV + 1) + (j + 1) + 1;
+                tempTris.push([p1, p2, p3], [p2, p4, p3]);
+              }
             }
-          }
 
-          verts = tempVerts;
-          tris = tempTris;
-          window.lastValidMathVerts = verts;
-          window.lastValidMathTris  = tris;
-        } catch(err) {
-          if (window.lastValidMathVerts) {
-            verts = window.lastValidMathVerts;
-            tris  = window.lastValidMathTris;
-          }
+            verts = tempVerts;
+            tris = tempTris;
+            window.lastValidMathVerts = verts;
+            window.lastValidMathTris  = tris;
+          } catch(err) {}
+        }
+
+        if ((!verts || verts.length === 0) && window.lastValidMathVerts) {
+          verts = window.lastValidMathVerts;
+          tris  = window.lastValidMathTris;
         }
       }
 
