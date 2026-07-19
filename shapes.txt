@@ -1199,17 +1199,31 @@ for _, meta in ipairs(SHAPE_META) do
     end
 
     if key == "custom" then
-        local targetUrl = "https://raw.githubusercontent.com/.../shape.json"
         secShape:Divider("Web / Custom JSON Loader")
-        secShape:Input("Web JSON URL", "https://...", function(url)
-            targetUrl = url
-        end)
-        secShape:Button("Load Shape from URL", function()
-            local success = loadCustomMeshFromURL(targetUrl)
-            if success then
-                Lib:Notify("Custom Shape", "Loaded 3D mesh successfully!", 3)
+        secShape:Button("Load from Clipboard URL", function()
+            local clip = (getclipboard and getclipboard()) or ""
+            if clip:match("^https?://") then
+                local success = loadCustomMeshFromURL(clip)
+                if success then
+                    Lib:Notify("Custom Shape", "Loaded 3D mesh from clipboard URL!", 3)
+                else
+                    Lib:Notify("Custom Shape", "Failed to parse JSON from URL", 3)
+                end
             else
-                Lib:Notify("Custom Shape", "Failed to fetch/parse JSON URL", 3)
+                Lib:Notify("Custom Shape", "Copy a valid URL to clipboard first!", 3)
+            end
+        end)
+        secShape:Button("Load from Clipboard JSON", function()
+            local clip = (getclipboard and getclipboard()) or ""
+            if clip ~= "" then
+                local success = loadCustomMeshFromJSON(clip)
+                if success then
+                    Lib:Notify("Custom Shape", "Loaded 3D mesh from clipboard JSON!", 3)
+                else
+                    Lib:Notify("Custom Shape", "Failed to parse JSON from clipboard", 3)
+                end
+            else
+                Lib:Notify("Custom Shape", "Copy JSON text to clipboard first!", 3)
             end
         end)
     end
