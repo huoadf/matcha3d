@@ -1007,12 +1007,21 @@ local function loadCustomMeshFromURL(url)
 end
 
 _G.LoadCustomShape = function(vertsTable, trisTable, color3)
+    local HttpService = game:GetService("HttpService")
+    if type(vertsTable) == "string" then
+        pcall(function() vertsTable = HttpService:JSONDecode(vertsTable) end)
+    end
+    if type(trisTable) == "string" then
+        pcall(function() trisTable = HttpService:JSONDecode(trisTable) end)
+    end
+
     if type(vertsTable) == "table" and type(trisTable) == "table" then
         CUSTOM_MESH = { verts = vertsTable, tris = trisTable }
         if color3 then
             CFG.COL_CUSTOM = color3
             applyColor("custom", color3)
         end
+        setShapeEnabled("custom", true)
         return true
     end
     return false
