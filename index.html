@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Matcha3D — Standalone Script & 3D Shape Generator</title>
+  <title>Matcha3D — 3D Custom Shape Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -16,6 +16,8 @@
       --accent-glow: rgba(238, 138, 255, 0.35);
       --text: #f0f0f5;
       --muted: #8a8a9a;
+      --danger: #ff4757;
+      --success: #2ed573;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -42,20 +44,20 @@
     }
 
     .sidebar {
-      width: 420px;
+      width: 440px;
       background: var(--panel);
       border-left: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      padding: 24px;
-      gap: 20px;
+      padding: 20px;
+      gap: 16px;
       overflow-y: auto;
     }
 
     .header {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .dot {
@@ -67,33 +69,63 @@
     }
 
     h1 {
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 700;
       letter-spacing: -0.5px;
     }
 
     .subtitle {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--muted);
-      margin-top: -14px;
+      margin-top: -10px;
+    }
+
+    .mode-tabs {
+      display: flex;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 8px;
+      padding: 4px;
+      gap: 4px;
+      border: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      padding: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #000;
     }
 
     .section {
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 16px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
 
     .section-title {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.8px;
       color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .form-group {
@@ -103,20 +135,20 @@
     }
 
     label {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 500;
       display: flex;
       justify-content: space-between;
     }
 
-    select, input[type="range"], input[type="color"], input[type="text"], textarea {
+    select, input[type="range"], input[type="color"], input[type="number"], input[type="text"], textarea {
       background: rgba(0, 0, 0, 0.4);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 6px;
       color: var(--text);
-      padding: 8px 12px;
+      padding: 6px 10px;
       font-family: inherit;
-      font-size: 13px;
+      font-size: 12px;
       outline: none;
       transition: border-color 0.2s;
     }
@@ -125,10 +157,10 @@
       border-color: var(--accent);
     }
 
-    input[type="range"] {
-      padding: 0;
-      accent-color: var(--accent);
-      cursor: pointer;
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
     }
 
     .btn {
@@ -137,9 +169,9 @@
       font-weight: 700;
       border: none;
       border-radius: 8px;
-      padding: 14px;
+      padding: 12px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13px;
       transition: all 0.2s;
       box-shadow: 0 4px 16px var(--accent-glow);
     }
@@ -149,35 +181,75 @@
       filter: brightness(1.1);
     }
 
+    .btn-sm {
+      padding: 6px 10px;
+      font-size: 11px;
+      border-radius: 6px;
+    }
+
     .btn-secondary {
       background: rgba(255, 255, 255, 0.08);
       color: var(--text);
       box-shadow: none;
       font-weight: 600;
-      padding: 10px;
     }
 
     .btn-secondary:hover {
       background: rgba(255, 255, 255, 0.14);
     }
 
+    .btn-danger {
+      background: rgba(255, 71, 87, 0.2);
+      color: var(--danger);
+      border: 1px solid rgba(255, 71, 87, 0.4);
+    }
+
+    .btn-danger:hover {
+      background: rgba(255, 71, 87, 0.4);
+    }
+
+    .item-list {
+      max-height: 140px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .item-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0,0,0,0.3);
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      font-size: 11px;
+    }
+
+    .item-row span {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      width: 24px;
+    }
+
     textarea {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
-      height: 140px;
+      height: 120px;
       resize: none;
     }
 
     .toast {
       position: absolute;
-      bottom: 24px;
-      left: 24px;
+      bottom: 20px;
+      left: 20px;
       background: var(--panel);
       border: 1px solid var(--accent);
       color: var(--text);
-      padding: 12px 20px;
+      padding: 10px 18px;
       border-radius: 8px;
-      font-size: 13px;
+      font-size: 12px;
       opacity: 0;
       transform: translateY(10px);
       transition: all 0.3s;
@@ -194,63 +266,118 @@
 </head>
 <body>
   <div id="viewport">
-    <div id="toast" class="toast">Standalone Script copied to clipboard!</div>
+    <div id="toast" class="toast">Action completed!</div>
   </div>
 
   <div class="sidebar">
     <div class="header">
       <div class="dot"></div>
-      <h1>Matcha3D Studio</h1>
+      <h1>Matcha3D Shape Studio</h1>
     </div>
-    <div class="subtitle">Standalone Roblox Script & 3D Mesh Generator</div>
+    <div class="subtitle">Design Custom 3D Shapes & Export Roblox Scripts</div>
 
-    <div class="section">
-      <div class="section-title">Shape Customizer</div>
-      <div class="form-group">
-        <label for="shapeType">Preset Geometry</label>
-        <select id="shapeType">
-          <option value="mobius">Möbius Strip</option>
-          <option value="trefoil">Torus Knot (3,2 Trefoil)</option>
-          <option value="hyperboloid">Hyperboloid (Hourglass)</option>
-          <option value="pyramid">Pyramid</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="shapeColor">Color</label>
-        <input type="color" id="shapeColor" value="#ee8aff">
-      </div>
+    <div class="mode-tabs">
+      <button class="tab-btn active" id="tabPreset">Preset Shapes</button>
+      <button class="tab-btn" id="tabCustom">Visual 3D Editor</button>
+      <button class="tab-btn" id="tabMath">Math Formulas</button>
     </div>
 
-    <div class="section">
-      <div class="section-title">Parameters</div>
-      <div class="form-group">
-        <label>Radius <span id="valRadius">1.5</span></label>
-        <input type="range" id="paramRadius" min="0.5" max="4.0" step="0.1" value="1.5">
-      </div>
-      <div class="form-group">
-        <label>Width / Height <span id="valScale">0.8</span></label>
-        <input type="range" id="paramScale" min="0.2" max="3.0" step="0.1" value="0.8">
-      </div>
-      <div class="form-group">
-        <label>Resolution (Segments) <span id="valSegs">24</span></label>
-        <input type="range" id="paramSegs" min="8" max="48" step="2" value="24">
+    <!-- PRESET MODE PANEL -->
+    <div id="panelPreset" class="mode-panel">
+      <div class="section">
+        <div class="section-title">Preset Templates</div>
+        <div class="form-group">
+          <label for="shapeType">Base Geometry</label>
+          <select id="shapeType">
+            <option value="mobius">Möbius Strip</option>
+            <option value="trefoil">Torus Knot (3,2 Trefoil)</option>
+            <option value="hyperboloid">Hyperboloid (Hourglass)</option>
+            <option value="pyramid">Pyramid</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="shapeColor">Color</label>
+          <input type="color" id="shapeColor" value="#ee8aff">
+        </div>
+        <div class="form-group">
+          <label>Radius <span id="valRadius">1.5</span></label>
+          <input type="range" id="paramRadius" min="0.5" max="4.0" step="0.1" value="1.5">
+        </div>
+        <div class="form-group">
+          <label>Width / Height <span id="valScale">0.8</span></label>
+          <input type="range" id="paramScale" min="0.2" max="3.0" step="0.1" value="0.8">
+        </div>
+        <div class="form-group">
+          <label>Segments <span id="valSegs">24</span></label>
+          <input type="range" id="paramSegs" min="8" max="48" step="2" value="24">
+        </div>
       </div>
     </div>
 
+    <!-- CUSTOM VISUAL EDITOR PANEL -->
+    <div id="panelCustom" class="mode-panel" style="display:none;">
+      <div class="section">
+        <div class="section-title">
+          <span>Vertices (Points)</span>
+          <button class="btn btn-sm btn-secondary" id="btnAddVert">+ Add Point</button>
+        </div>
+        <div class="grid-3">
+          <input type="number" id="newX" placeholder="X" value="0" step="0.5">
+          <input type="number" id="newY" placeholder="Y" value="1" step="0.5">
+          <input type="number" id="newZ" placeholder="Z" value="0" step="0.5">
+        </div>
+        <div class="item-list" id="vertList"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span>Triangles (Faces)</span>
+          <button class="btn btn-sm btn-secondary" id="btnAddTri">+ Add Face</button>
+        </div>
+        <div class="grid-3">
+          <input type="number" id="triV1" placeholder="P1" value="1" min="1">
+          <input type="number" id="triV2" placeholder="P2" value="2" min="1">
+          <input type="number" id="triV3" placeholder="P3" value="3" min="1">
+        </div>
+        <div class="item-list" id="triList"></div>
+      </div>
+    </div>
+
+    <!-- MATH FORMULA PANEL -->
+    <div id="panelMath" class="mode-panel" style="display:none;">
+      <div class="section">
+        <div class="section-title">Parametric Math Equations</div>
+        <div class="form-group">
+          <label for="eqX">X(u, v)</label>
+          <input type="text" id="eqX" value="Math.cos(u) * (1 + 0.5 * Math.cos(v))">
+        </div>
+        <div class="form-group">
+          <label for="eqY">Y(u, v)</label>
+          <input type="text" id="eqY" value="Math.sin(v) * 0.8">
+        </div>
+        <div class="form-group">
+          <label for="eqZ">Z(u, v)</label>
+          <input type="text" id="eqZ" value="Math.sin(u) * (1 + 0.5 * Math.cos(v))">
+        </div>
+        <button class="btn btn-secondary btn-sm" id="btnGenMath">Generate Math Mesh</button>
+      </div>
+    </div>
+
+    <!-- EXPORT & OUTPUT -->
     <div class="section">
-      <div class="section-title">Generator Actions</div>
+      <div class="section-title">Standalone Exporter</div>
       <button class="btn" id="btnCopyStandalone">📋 Copy Standalone Roblox Script</button>
-      <button class="btn btn-secondary" id="btnCopyJson">Copy JSON Mesh Payload</button>
+      <button class="btn btn-secondary" id="btnCopyJson">Copy Custom JSON Payload</button>
     </div>
 
     <div class="section">
-      <div class="section-title">Generated Output Preview</div>
+      <div class="section-title">Output Code Preview</div>
       <textarea id="outputBox" readonly></textarea>
     </div>
   </div>
 
   <script>
-    // Three.js Scene Setup
+    // Three.js Scene
     const container = document.getElementById('viewport');
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
@@ -261,116 +388,236 @@
     renderer.setSize(container.clientWidth, container.clientHeight);
     container.appendChild(renderer.domElement);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
-
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
     const dirLight = new THREE.DirectionalLight(0xee8aff, 0.8);
     dirLight.position.set(5, 10, 7);
     scene.add(dirLight);
 
     let currentMesh = null;
-    let currentVertices = [];
-    let currentTriangles = [];
+    let nodeGroup = new THREE.Group();
+    scene.add(nodeGroup);
 
-    function generateMesh() {
+    let activeMode = 'preset';
+    let customVertices = [
+      [-1.5, 0, -1.5], [1.5, 0, -1.5], [1.5, 0, 1.5], [-1.5, 0, 1.5],
+      [0, 2.5, 0]
+    ];
+    let customTriangles = [
+      [1, 2, 5], [2, 3, 5], [3, 4, 5], [4, 1, 5], [1, 2, 3], [1, 3, 4]
+    ];
+
+    function updateVertListUI() {
+      const container = document.getElementById('vertList');
+      container.innerHTML = '';
+      customVertices.forEach((v, i) => {
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        row.innerHTML = `
+          <span>P${i+1}</span>
+          <div style="flex:1">(${v[0]}, ${v[1]}, ${v[2]})</div>
+          <button class="btn btn-sm btn-danger" onclick="removeVert(${i})">✕</button>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function updateTriListUI() {
+      const container = document.getElementById('triList');
+      container.innerHTML = '';
+      customTriangles.forEach((t, i) => {
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        row.innerHTML = `
+          <span>F${i+1}</span>
+          <div style="flex:1">Tri [P${t[0]}, P${t[1]}, P${t[2]}]</div>
+          <button class="btn btn-sm btn-danger" onclick="removeTri(${i})">✕</button>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    window.removeVert = function(idx) {
+      customVertices.splice(idx, 1);
+      updateVertListUI();
+      renderCurrentMesh();
+    };
+
+    window.removeTri = function(idx) {
+      customTriangles.splice(idx, 1);
+      updateTriListUI();
+      renderCurrentMesh();
+    };
+
+    document.getElementById('btnAddVert').addEventListener('click', () => {
+      const x = parseFloat(document.getElementById('newX').value) || 0;
+      const y = parseFloat(document.getElementById('newY').value) || 0;
+      const z = parseFloat(document.getElementById('newZ').value) || 0;
+      customVertices.push([x, y, z]);
+      updateVertListUI();
+      renderCurrentMesh();
+    });
+
+    document.getElementById('btnAddTri').addEventListener('click', () => {
+      const p1 = parseInt(document.getElementById('triV1').value) || 1;
+      const p2 = parseInt(document.getElementById('triV2').value) || 1;
+      const p3 = parseInt(document.getElementById('triV3').value) || 1;
+      customTriangles.push([p1, p2, p3]);
+      updateTriListUI();
+      renderCurrentMesh();
+    });
+
+    // Tab Navigation
+    document.getElementById('tabPreset').addEventListener('click', (e) => setMode('preset', e.target));
+    document.getElementById('tabCustom').addEventListener('click', (e) => setMode('custom', e.target));
+    document.getElementById('tabMath').addEventListener('click', (e) => setMode('math', e.target));
+
+    function setMode(mode, btn) {
+      activeMode = mode;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      document.getElementById('panelPreset').style.display = mode === 'preset' ? 'block' : 'none';
+      document.getElementById('panelCustom').style.display = mode === 'custom' ? 'block' : 'none';
+      document.getElementById('panelMath').style.display = mode === 'math' ? 'block' : 'none';
+
+      renderCurrentMesh();
+    }
+
+    function renderCurrentMesh() {
       if (currentMesh) scene.remove(currentMesh);
+      while(nodeGroup.children.length > 0) nodeGroup.remove(nodeGroup.children[0]);
 
-      const type = document.getElementById('shapeType').value;
-      const radius = parseFloat(document.getElementById('paramRadius').value);
-      const scale = parseFloat(document.getElementById('paramScale').value);
-      const segs = parseInt(document.getElementById('paramSegs').value);
+      let verts = [], tris = [];
       const colorHex = document.getElementById('shapeColor').value;
 
-      document.getElementById('valRadius').innerText = radius;
-      document.getElementById('valScale').innerText = scale;
-      document.getElementById('valSegs').innerText = segs;
+      if (activeMode === 'preset') {
+        const type = document.getElementById('shapeType').value;
+        const radius = parseFloat(document.getElementById('paramRadius').value);
+        const scale = parseFloat(document.getElementById('paramScale').value);
+        const segs = parseInt(document.getElementById('paramSegs').value);
 
-      currentVertices = [];
-      currentTriangles = [];
+        document.getElementById('valRadius').innerText = radius;
+        document.getElementById('valScale').innerText = scale;
+        document.getElementById('valSegs').innerText = segs;
 
-      const geom = new THREE.BufferGeometry();
-
-      if (type === 'mobius') {
-        const R = radius, w = scale / 2;
-        for (let i = 0; i <= segs; i++) {
-          const u = (i / segs) * Math.PI * 2;
-          const cosU = Math.cos(u), sinU = Math.sin(u);
-          const cosHalf = Math.cos(u / 2), sinHalf = Math.sin(u / 2);
-
-          const a = [(R - w * cosHalf) * cosU, -w * sinHalf, (R - w * cosHalf) * sinU];
-          const b = [(R + w * cosHalf) * cosU,  w * sinHalf, (R + w * cosHalf) * sinU];
-          currentVertices.push(a, b);
-        }
-        for (let i = 0; i < segs; i++) {
-          const p1 = i * 2 + 1, p2 = i * 2 + 2;
-          const p3 = (i + 1) * 2 + 1, p4 = (i + 1) * 2 + 2;
-          currentTriangles.push([p1, p2, p3], [p2, p4, p3]);
-        }
-      } else if (type === 'trefoil') {
-        const R = radius, w = scale;
-        for (let i = 0; i <= segs; i++) {
-          const t = (i / segs) * Math.PI * 2;
-          const x = (Math.sin(t) + 2 * Math.sin(2 * t)) * R * 0.4;
-          const y = -Math.sin(3 * t) * R * 0.4;
-          const z = (Math.cos(t) - 2 * Math.cos(2 * t)) * R * 0.4;
-
-          const dt = 0.01;
-          const tx = (Math.sin(t + dt) + 2 * Math.sin(2 * (t + dt))) * R * 0.4 - x;
-          const tz = (Math.cos(t + dt) - 2 * Math.cos(2 * (t + dt))) * R * 0.4 - z;
-
-          let bx = -tz, bz = tx;
-          const len = Math.sqrt(bx * bx + bz * bz);
-          if (len > 0) { bx = (bx / len) * (w / 2); bz = (bz / len) * (w / 2); } else { bx = w / 2; bz = 0; }
-          currentVertices.push([x - bx, y, z - bz], [x + bx, y, z + bz]);
-        }
-        for (let i = 0; i < segs; i++) {
-          const p1 = i * 2 + 1, p2 = i * 2 + 2;
-          const p3 = (i + 1) * 2 + 1, p4 = (i + 1) * 2 + 2;
-          currentTriangles.push([p1, p2, p3], [p2, p4, p3]);
-        }
-      } else if (type === 'hyperboloid') {
-        const Rbase = radius, Rwaist = scale, H = 2.0;
-        const rings = 10;
-        for (let ri = 0; ri <= rings; ri++) {
-          const t = (ri / rings) * 2 - 1;
-          const r = Math.sqrt(Rwaist * Rwaist + (t * t) * (Rbase * Rbase - Rwaist * Rwaist));
-          const y = t * (H / 2);
-          for (let s = 0; s < segs; s++) {
-            const a = (s / segs) * Math.PI * 2;
-            currentVertices.push([r * Math.cos(a), y + H / 2, r * Math.sin(a)]);
+        if (type === 'mobius') {
+          const R = radius, w = scale / 2;
+          for (let i = 0; i <= segs; i++) {
+            const u = (i / segs) * Math.PI * 2;
+            const cosU = Math.cos(u), sinU = Math.sin(u);
+            const cosHalf = Math.cos(u / 2), sinHalf = Math.sin(u / 2);
+            verts.push(
+              [(R - w * cosHalf) * cosU, -w * sinHalf, (R - w * cosHalf) * sinU],
+              [(R + w * cosHalf) * cosU,  w * sinHalf, (R + w * cosHalf) * sinU]
+            );
           }
-        }
-        for (let ri = 0; ri < rings; ri++) {
-          for (let s = 0; s < segs; s++) {
-            const ns = (s + 1) % segs;
-            const p1 = ri * segs + s + 1;
-            const p2 = ri * segs + ns + 1;
-            const p3 = (ri + 1) * segs + s + 1;
-            const p4 = (ri + 1) * segs + ns + 1;
-            currentTriangles.push([p1, p2, p3], [p2, p4, p3]);
+          for (let i = 0; i < segs; i++) {
+            const p1 = i * 2 + 1, p2 = i * 2 + 2;
+            const p3 = (i + 1) * 2 + 1, p4 = (i + 1) * 2 + 2;
+            tris.push([p1, p2, p3], [p2, p4, p3]);
           }
+        } else if (type === 'trefoil') {
+          const R = radius, w = scale;
+          for (let i = 0; i <= segs; i++) {
+            const t = (i / segs) * Math.PI * 2;
+            const x = (Math.sin(t) + 2 * Math.sin(2 * t)) * R * 0.4;
+            const y = -Math.sin(3 * t) * R * 0.4;
+            const z = (Math.cos(t) - 2 * Math.cos(2 * t)) * R * 0.4;
+            const dt = 0.01;
+            const tx = (Math.sin(t + dt) + 2 * Math.sin(2 * (t + dt))) * R * 0.4 - x;
+            const tz = (Math.cos(t + dt) - 2 * Math.cos(2 * (t + dt))) * R * 0.4 - z;
+            let bx = -tz, bz = tx;
+            const len = Math.sqrt(bx * bx + bz * bz);
+            if (len > 0) { bx = (bx / len) * (w / 2); bz = (bz / len) * (w / 2); } else { bx = w / 2; bz = 0; }
+            verts.push([x - bx, y, z - bz], [x + bx, y, z + bz]);
+          }
+          for (let i = 0; i < segs; i++) {
+            const p1 = i * 2 + 1, p2 = i * 2 + 2;
+            const p3 = (i + 1) * 2 + 1, p4 = (i + 1) * 2 + 2;
+            tris.push([p1, p2, p3], [p2, p4, p3]);
+          }
+        } else if (type === 'hyperboloid') {
+          const Rbase = radius, Rwaist = scale, H = 2.0, rings = 10;
+          for (let ri = 0; ri <= rings; ri++) {
+            const t = (ri / rings) * 2 - 1;
+            const r = Math.sqrt(Rwaist * Rwaist + (t * t) * (Rbase * Rbase - Rwaist * Rwaist));
+            const y = t * (H / 2);
+            for (let s = 0; s < segs; s++) {
+              const a = (s / segs) * Math.PI * 2;
+              verts.push([r * Math.cos(a), y + H / 2, r * Math.sin(a)]);
+            }
+          }
+          for (let ri = 0; ri < rings; ri++) {
+            for (let s = 0; s < segs; s++) {
+              const ns = (s + 1) % segs;
+              const p1 = ri * segs + s + 1;
+              const p2 = ri * segs + ns + 1;
+              const p3 = (ri + 1) * segs + s + 1;
+              const p4 = (ri + 1) * segs + ns + 1;
+              tris.push([p1, p2, p3], [p2, p4, p3]);
+            }
+          }
+        } else {
+          verts = [[-radius, 0, -radius], [radius, 0, -radius], [radius, 0, radius], [-radius, 0, radius], [0, scale * 2, 0]];
+          tris  = [[1, 2, 5], [2, 3, 5], [3, 4, 5], [4, 1, 5], [1, 2, 3], [1, 3, 4]];
         }
-      } else {
-        currentVertices = [
-          [-radius, 0, -radius], [radius, 0, -radius],
-          [radius, 0, radius], [-radius, 0, radius],
-          [0, scale * 2, 0]
-        ];
-        currentTriangles = [
-          [1, 2, 5], [2, 3, 5], [3, 4, 5], [4, 1, 5], [1, 2, 3], [1, 3, 4]
-        ];
+      } else if (activeMode === 'custom') {
+        verts = customVertices;
+        tris = customTriangles;
+
+        // Render point handles for custom mode
+        const nodeGeom = new THREE.SphereGeometry(0.08, 12, 12);
+        const nodeMat = new THREE.MeshBasicMaterial({ color: 0xee8aff });
+        verts.forEach(v => {
+          const node = new THREE.Mesh(nodeGeom, nodeMat);
+          node.position.set(v[0], v[1], v[2]);
+          nodeGroup.add(node);
+        });
+      } else if (activeMode === 'math') {
+        const eqXStr = document.getElementById('eqX').value;
+        const eqYStr = document.getElementById('eqY').value;
+        const eqZStr = document.getElementById('eqZ').value;
+
+        try {
+          const fx = new Function('u', 'v', `return ${eqXStr};`);
+          const fy = new Function('u', 'v', `return ${eqYStr};`);
+          const fz = new Function('u', 'v', `return ${eqZStr};`);
+
+          const segU = 16, segV = 16;
+          for (let i = 0; i <= segU; i++) {
+            const u = (i / segU) * Math.PI * 2;
+            for (let j = 0; j <= segV; j++) {
+              const v = (j / segV) * Math.PI * 2;
+              verts.push([fx(u, v), fy(u, v), fz(u, v)]);
+            }
+          }
+
+          for (let i = 0; i < segU; i++) {
+            for (let j = 0; j < segV; j++) {
+              const p1 = i * (segV + 1) + j + 1;
+              const p2 = i * (segV + 1) + (j + 1) + 1;
+              const p3 = (i + 1) * (segV + 1) + j + 1;
+              const p4 = (i + 1) * (segV + 1) + (j + 1) + 1;
+              tris.push([p1, p2, p3], [p2, p4, p3]);
+            }
+          }
+        } catch(err) {
+          console.warn('Math function error:', err);
+        }
       }
 
+      // Three.js Buffer Creation
       const flatVerts = [];
       const flatColor = new THREE.Color(colorHex);
 
-      currentTriangles.forEach(tri => {
-        const v1 = currentVertices[tri[0] - 1];
-        const v2 = currentVertices[tri[1] - 1];
-        const v3 = currentVertices[tri[2] - 1];
+      tris.forEach(tri => {
+        const v1 = verts[tri[0] - 1];
+        const v2 = verts[tri[1] - 1];
+        const v3 = verts[tri[2] - 1];
         if (v1 && v2 && v3) flatVerts.push(...v1, ...v2, ...v3);
       });
 
+      const geom = new THREE.BufferGeometry();
       geom.setAttribute('position', new THREE.Float32BufferAttribute(flatVerts, 3));
       geom.computeVertexNormals();
 
@@ -384,22 +631,21 @@
       currentMesh = new THREE.Mesh(geom, mat);
       scene.add(currentMesh);
 
+      // Output Code Generation
       const r = parseInt(colorHex.slice(1,3), 16);
       const g = parseInt(colorHex.slice(3,5), 16);
       const b = parseInt(colorHex.slice(5,7), 16);
 
-      const standaloneLua = `-- Standalone Matcha3D Script
--- Shape: ${type.toUpperCase()}
+      const standaloneLua = `-- Standalone Matcha3D Custom Script
 -- Generated by https://huoadf.github.io/matcha3d/
 
-local customVerts = ${JSON.stringify(currentVertices.map(v => [parseFloat(v[0].toFixed(3)), parseFloat(v[1].toFixed(3)), parseFloat(v[2].toFixed(3))]))}
-local customTris  = ${JSON.stringify(currentTriangles)}
+local customVerts = ${JSON.stringify(verts.map(v => [parseFloat(v[0].toFixed(3)), parseFloat(v[1].toFixed(3)), parseFloat(v[2].toFixed(3))]))}
+local customTris  = ${JSON.stringify(tris)}
 local customColor = Color3.fromRGB(${r}, ${g}, ${b})
 
--- Load Main Engine
+-- Load Engine & Pass Custom Mesh
 local mainEngine = loadstring(game:HttpGet("https://raw.githubusercontent.com/huoadf/matcha3d/main/shapes.lua"))()
 
--- Register & Enable Custom Mesh
 if _G.LoadCustomShape then
     _G.LoadCustomShape(customVerts, customTris, customColor)
 end
@@ -407,11 +653,12 @@ end
       document.getElementById('outputBox').value = standaloneLua;
     }
 
-    document.getElementById('shapeType').addEventListener('change', generateMesh);
-    document.getElementById('paramRadius').addEventListener('input', generateMesh);
-    document.getElementById('paramScale').addEventListener('input', generateMesh);
-    document.getElementById('paramSegs').addEventListener('input', generateMesh);
-    document.getElementById('shapeColor').addEventListener('input', generateMesh);
+    // Event Listeners
+    ['shapeType', 'paramRadius', 'paramScale', 'paramSegs', 'shapeColor'].forEach(id => {
+      document.getElementById(id).addEventListener('input', renderCurrentMesh);
+    });
+
+    document.getElementById('btnGenMath').addEventListener('click', renderCurrentMesh);
 
     function showToast(msg) {
       const toast = document.getElementById('toast');
@@ -421,8 +668,7 @@ end
     }
 
     document.getElementById('btnCopyStandalone').addEventListener('click', () => {
-      const text = document.getElementById('outputBox').value;
-      navigator.clipboard.writeText(text);
+      navigator.clipboard.writeText(document.getElementById('outputBox').value);
       showToast('Standalone Roblox Script copied to clipboard!');
     });
 
@@ -431,13 +677,12 @@ end
       const g = parseInt(document.getElementById('shapeColor').value.slice(3,5), 16);
       const b = parseInt(document.getElementById('shapeColor').value.slice(5,7), 16);
       const payload = {
-        name: document.getElementById('shapeType').value,
         color: [r, g, b],
-        vertices: currentVertices,
-        triangles: currentTriangles
+        vertices: activeMode === 'custom' ? customVertices : [],
+        triangles: activeMode === 'custom' ? customTriangles : []
       };
       navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
-      showToast('JSON payload copied!');
+      showToast('Custom JSON Payload copied!');
     });
 
     function animate() {
@@ -452,7 +697,9 @@ end
       renderer.setSize(container.clientWidth, container.clientHeight);
     });
 
-    generateMesh();
+    updateVertListUI();
+    updateTriListUI();
+    renderCurrentMesh();
     animate();
   </script>
 </body>
