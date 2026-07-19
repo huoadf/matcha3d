@@ -653,12 +653,11 @@ end
       document.getElementById('outputBox').value = standaloneLua;
     }
 
-    // Event Listeners
-    ['shapeType', 'paramRadius', 'paramScale', 'paramSegs', 'shapeColor'].forEach(id => {
-      document.getElementById(id).addEventListener('input', renderCurrentMesh);
+    // Event Listeners for Real-time Auto-Update
+    ['shapeType', 'paramRadius', 'paramScale', 'paramSegs', 'shapeColor', 'eqX', 'eqY', 'eqZ'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', renderCurrentMesh);
     });
-
-    document.getElementById('btnGenMath').addEventListener('click', renderCurrentMesh);
 
     function showToast(msg) {
       const toast = document.getElementById('toast');
