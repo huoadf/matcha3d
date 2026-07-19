@@ -656,7 +656,7 @@
 
       // Safe Luau Table Formatting
       function toLuaTable(data) {
-        if (!data) return '{}';
+        if (data === null || data === undefined) return '{}';
         if (Array.isArray(data)) {
           return '{' + data.map(toLuaTable).join(',') + '}';
         }
