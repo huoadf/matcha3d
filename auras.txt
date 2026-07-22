@@ -470,7 +470,11 @@ end)
 
 -- ── INS-UI Menu Setup ─────────────────────────────────────────────────────────
 local okUI, Lib = pcall(function()
-    return loadstring(game:HttpGet("https://raw.githubusercontent.com/huoadf/matcha3d/main/ins_uilib.lua"))()
+    local code = game:HttpGet("https://raw.githubusercontent.com/huoadf/matcha3d/main/ins_uilib.lua?v=2")
+    if type(code) == "string" and not code:find("404") and code:find("CreateWindow") then
+        return loadstring(code)()
+    end
+    return nil
 end)
 
 if okUI and Lib and Lib.CreateWindow then
