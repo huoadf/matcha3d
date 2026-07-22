@@ -469,15 +469,26 @@ RunService.Heartbeat:Connect(function()
 end)
 
 -- ── INS-UI Menu Setup ─────────────────────────────────────────────────────────
-local okUI, Lib = pcall(function()
-    local code = game:HttpGet("https://raw.githubusercontent.com/huoadf/matcha3d/main/ins_uilib.lua?v=2")
-    if type(code) == "string" and not code:find("404") and code:find("CreateWindow") then
-        return loadstring(code)()
+local Lib = nil
+pcall(function()
+    local code = game:HttpGet("https://raw.githubusercontent.com/huoadf/matcha3d/main/ins_uilib.lua?v=3")
+    if type(code) == "string" and code:find("CreateWindow") then
+        Lib = loadstring(code)()
     end
-    return nil
 end)
 
-if okUI and Lib and Lib.CreateWindow then
+if not Lib then
+    pcall(function()
+        local code = game:HttpGet("https://raw.githubusercontent.com/neaxusxgod-png/INS-ui/main/uilib.min.lua")
+        if type(code) == "string" and code:find("CreateWindow") then
+            Lib = loadstring(code)()
+        end
+    end)
+end
+
+Lib = Lib or _G.INSui or (getfenv and getfenv().INSui)
+
+if Lib and Lib.CreateWindow then
     local Win = Lib:CreateWindow("Matcha 3D Aura Suite")
     local MainTab = Win:Tab("3D Auras")
 
